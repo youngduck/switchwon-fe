@@ -1,0 +1,18 @@
+@import url("https://fastly.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.1/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css");
+@import "tailwindcss";
+@import "@youngduck/yd-ui/styles";
+
+@theme {
+}
+
+html,
+body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-yds-wanted);
+}
+
+@layer components {
+ 
+}

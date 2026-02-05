@@ -1,0 +1,34 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔍 Switchwon 배포 준비 검증 시작..."
+
+# 1. 테스트 실행
+echo "🧪 테스트 실행 중..."
+npx pnpm run test || { echo "❌ 테스트 실패!"; exit 1; }
+
+# 2. 빌드 실행
+echo "🔨 개발 빌드 실행 중..."
+npx pnpm run build:dev || { echo "❌ 개발 빌드 실패!"; exit 1; }
+
+# 3. 빌드 결과물 검증
+echo "🔍 빌드 결과물 검증 중..."
+if [ ! -d "dist" ]; then
+  echo "❌ dist 폴더가 존재하지 않습니다!"
+  exit 1
+fi
+
+# 4. 빌드 크기 체크
+echo "📏 빌드 크기 체크 중..."
+if [ -d "dist" ]; then
+  DIST_SIZE=$(du -sh dist | cut -f1)
+  echo "📦 메인 빌드 크기: $DIST_SIZE"
+  
+  # 전체 빌드 크기가 너무 큰 경우 경고
+  DIST_SIZE_KB=$(du -sk dist | cut -f1)
+  if [ "$DIST_SIZE_KB" -gt 10240 ]; then  # 10MB 이상
+    echo "⚠️  빌드 크기가 큽니다 ($DIST_SIZE). 번들 최적화를 고려해보세요."
+  fi
+fi
+
+echo "✅ 모든 검증 완료! Push 진행"
